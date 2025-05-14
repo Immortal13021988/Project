@@ -1,7 +1,7 @@
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
-def filter_by_state(dict_filter: List[Dict[str, Any]], state: str = 'EXECUTED') -> List[Dict]:
+def filter_by_state(dict_filter: List[Dict[str, Any]], state: str = "EXECUTED") -> List[Dict]:
     """Функция возвращает новый список, отфильтрованный по указанному значению"""
     return [item for item in dict_filter if item.get("state") == state]
 
