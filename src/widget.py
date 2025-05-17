@@ -30,5 +30,3 @@ def get_date(date_time: str) -> str:
             return f"{date_split[1]}.{date_split[2]}.{date_split[0]}"
         return "Введен неверный формат даты"
     return "Введен неверный формат даты"
-
-print(get_date("202-4-03-11T02:26:18-671407"))
