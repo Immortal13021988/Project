@@ -1,4 +1,4 @@
-# from src.masks import get_mask_account, get_mask_card_number
+from src.masks import get_mask_account, get_mask_card_number
 from src.widget import get_date, mask_account_card
 
 from src.processing import sort_by_date, filter_by_state
@@ -9,8 +9,8 @@ dict_filter = [
     {'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'},
     {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}
 ]
-# print(get_mask_card_number(1234123412341234))
-# print(get_mask_account(12341234123412341234))
+print(get_mask_card_number(1234123412341234))
+print(get_mask_account(12341234123412341234))
 print(mask_account_card("Счет 73654108430135874305"))
 print(mask_account_card("MasterCard 7158300734726758"))
 print(mask_account_card("Visa Classic 6831982476737658"))
