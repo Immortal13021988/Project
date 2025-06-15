@@ -1,7 +1,7 @@
 from src.masks import get_mask_account, get_mask_card_number
 from src.widget import get_date, mask_account_card
 from src.processing import sort_by_date, filter_by_state
-from src.generators import filter_by_currency, transaction_descriptions
+from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 
 dict_filter = [
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -98,10 +98,13 @@ print(filter_by_state(dict_filter, "EXECUTED"))
 print(sort_by_date(dict_filter))
 
 filtered_trans = filter_by_currency(transactions, "USD")
-
 for _ in range(3):
-    print(next(filtered_trans))
+    print(next(filtered_trans, StopIteration))
 
 descriptions = transaction_descriptions(transactions)
 for _ in range(5):
-    print(next(descriptions))
+    print(next(descriptions, StopIteration))
+
+card_number = card_number_generator(1, 9999999999999999)
+for _ in range(5):
+    print(next(card_number))
