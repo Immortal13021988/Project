@@ -2,6 +2,7 @@ from src.masks import get_mask_account, get_mask_card_number
 from src.widget import get_date, mask_account_card
 from src.processing import sort_by_date, filter_by_state
 from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
+from src.decorators import log
 
 dict_filter = [
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -108,3 +109,19 @@ for _ in range(5):
 card_number = card_number_generator(1, 9999999999999999)
 for _ in range(5):
     print(next(card_number))
+
+
+@log(filename="mylog.txt")  # filename="mylog.txt"
+def my_function_1(x, y):
+    return x + y
+
+
+my_function_1(1, 2)
+
+
+@log(filename="mylog.txt")  # filename="mylog.txt"
+def my_function_2(x, y):
+    return x + y
+
+
+my_function_2(1, (1, 2))
