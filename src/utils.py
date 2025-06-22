@@ -2,6 +2,9 @@ import json
 
 
 def transaction():
+    """
+    Функция, которая принимает на вход путь до JSON-файла и возвращает список словарей с
+    данными о финансовых транзакциях"""
     try:
         with open("../data/operations.json", encoding="utf-8") as json_file:
             trans = json.load(json_file)
