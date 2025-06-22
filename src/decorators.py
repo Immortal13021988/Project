@@ -1,5 +1,6 @@
 def log(filename=None):
     """Декоратор логирования функции"""
+
     def wrapper(func):
         def inner(*args, **kwargs):
             try:
@@ -10,11 +11,11 @@ def log(filename=None):
                         f.write(success_message + "\n")
                 else:
                     print(success_message)
-                    return result
+                return result
             except Exception as e:
                 error_message = f"{func.__name__} error: {type(e).__name__}, Inputs: {args}, {kwargs}"
                 if filename:
-                    with open(filename, 'a', encoding="utf-8") as f:
+                    with open(filename, "a", encoding="utf-8") as f:
                         f.write(error_message + "\n")
                 else:
                     print(error_message)
