@@ -1,7 +1,8 @@
 import json
+from typing import Any
 
 
-def open_json(file_path: str) -> list:
+def open_json(file_path: str) -> list[Any]:
     """
     Функция, которая принимает на вход путь до JSON-файла и возвращает список словарей
     с данными о финансовых транзакциях
@@ -12,6 +13,3 @@ def open_json(file_path: str) -> list:
         return trans
     except Exception:
         return []
-
-
-
