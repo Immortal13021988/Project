@@ -3,6 +3,8 @@ from src.widget import get_date, mask_account_card
 from src.processing import sort_by_date, filter_by_state
 from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 from src.decorators import log
+from src.utils import open_json
+from src.external_api import sum_transaction
 
 dict_filter = [
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -125,3 +127,10 @@ def my_function_2(x, y):
 
 
 my_function_2(1, (1, 2))
+
+
+transactions = open_json("data/operations.json")
+
+"""for trans in transactions:
+    print(sum_transaction(trans)) """
+
