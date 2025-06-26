@@ -4,6 +4,7 @@ from src.processing import sort_by_date, filter_by_state
 from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 from src.decorators import log
 from src.utils import open_json
+from src.transaction_reader import open_csv, open_xlsx
 from src.external_api import sum_transaction
 
 dict_filter = [
@@ -128,9 +129,13 @@ def my_function_2(x, y):
 
 my_function_2(1, (1, 2))
 
-
 transactions = open_json("data/operations.json")
+# for trans in transactions:
+#     print(sum_transaction(trans))
 
-"""for trans in transactions:
-    print(sum_transaction(trans)) """
+transactions_csv = open_csv("data/transactions.csv")
+# print(transactions_csv)
 
+transactions_xlsx = open_xlsx("data/transactions_excel.xlsx")
+# print(type(transactions_xlsx))
+# # print(transactions_xlsx)
