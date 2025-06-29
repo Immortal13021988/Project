@@ -1,7 +1,8 @@
 import os
-from dotenv import load_dotenv
-import requests
 from typing import Dict
+
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -22,4 +23,4 @@ def sum_transaction(transaction: Dict) -> float:
         headers = {"apikey": API_KEY}
         response = requests.get(url, headers=headers)
         result = response.json()
-        return round(result["result"], 2)  # результат округляем до двух символов после запятой
+        return float(round(result["result"], 2))  # результат округляем до двух символов после запятой

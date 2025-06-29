@@ -4,6 +4,7 @@ from src.processing import sort_by_date, filter_by_state
 from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 from src.decorators import log
 from src.utils import open_json
+from src.transaction_reader import open_csv, open_xlsx
 from src.external_api import sum_transaction
 
 dict_filter = [
@@ -91,46 +92,51 @@ transactions = (
         }
     ]
 )
-print(get_mask_card_number(1234123412341234))
-print(get_mask_account(12341234123412341234))
-print(mask_account_card("Счет 73654108430135874305"))
-print(mask_account_card("MasterCard 7158300734726758"))
-print(mask_account_card("Visa Classic 6831982476737658"))
-print(get_date("2024-03-11T02:26:18.671407"))
-print(filter_by_state(dict_filter, "EXECUTED"))
-print(sort_by_date(dict_filter))
+# print(get_mask_card_number(1234123412341234))
+# print(get_mask_account(12341234123412341234))
+# print(mask_account_card("Счет 73654108430135874305"))
+# print(mask_account_card("MasterCard 7158300734726758"))
+# print(mask_account_card("Visa Classic 6831982476737658"))
+# print(get_date("2024-03-11T02:26:18.671407"))
+# print(filter_by_state(dict_filter, "EXECUTED"))
+# print(sort_by_date(dict_filter))
 
-filtered_trans = filter_by_currency(transactions, "USD")
-for _ in range(3):
-    print(next(filtered_trans, StopIteration))
-
-descriptions = transaction_descriptions(transactions)
-for _ in range(5):
-    print(next(descriptions, StopIteration))
-
-card_number = card_number_generator(1, 9999999999999999)
-for _ in range(5):
-    print(next(card_number))
-
-
-@log(filename="mylog.txt")  # filename="mylog.txt"
-def my_function_1(x, y):
-    return x + y
+# filtered_trans = filter_by_currency(transactions, "USD")
+# for _ in range(3):
+#     print(next(filtered_trans, StopIteration))
+#
+# descriptions = transaction_descriptions(transactions)
+# for _ in range(5):
+#     print(next(descriptions, StopIteration))
+#
+# card_number = card_number_generator(1, 9999999999999999)
+# for _ in range(5):
+#     print(next(card_number))
 
 
-my_function_1(1, 2)
+# @log(filename="mylog.txt")  # filename="mylog.txt"
+# def my_function_1(x, y):
+#     return x + y
+#
+#
+# my_function_1(1, 2)
 
 
-@log(filename="mylog.txt")  # filename="mylog.txt"
-def my_function_2(x, y):
-    return x + y
+# @log(filename="mylog.txt")  # filename="mylog.txt"
+# def my_function_2(x, y):
+#     return x + y
+#
+#
+# my_function_2(1, (1, 2))
 
+transactions_json = open_json("data/operations.json")
+# for trans in transactions_json:
+#     print(sum_transaction(trans))
+# print(transactions_json)
 
-my_function_2(1, (1, 2))
+transactions_csv = open_csv("data/transactions.csv")
+print(transactions_csv)
 
-
-transactions = open_json("data/operations.json")
-
-"""for trans in transactions:
-    print(sum_transaction(trans)) """
-
+transactions_xlsx = open_xlsx("data/transactions_excel.xlsx")
+# print(type(transactions_xlsx))
+# print(transactions_xlsx)
