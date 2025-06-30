@@ -26,11 +26,9 @@ def process_bank_search(data: list[dict], search: str) -> list:
                     new_list_dict.append(operation)
                 else:
                     continue
-            else:
-                continue
         return new_list_dict
-    except Exception as ex:
-        print(ex)
+    except (Exception, AssertionError):
+        return []
 
 
 def process_bank_operations(data: list[dict], categories: list) -> dict:
@@ -41,14 +39,15 @@ def process_bank_operations(data: list[dict], categories: list) -> dict:
         for operation in data:
             new_list.append(operation.get("description"))
         operation_count = Counter(item for item in new_list if item in categories)
-        print(operation_count)
         return dict(operation_count)
-    except Exception as ex:
-        print(f"Error {ex}")
+    except (Exception, AssertionError):
+        return {}
 
 
 def checking_description(data: list[dict]) -> list:
+    """Дополнительная функция для выявления всех возможных описаний транзакций в списках транзакций"""
     new_list = []
     for operation in data:
-        new_list.append(operation.get("description"))
-    return list(set(new_list))
+        if type(operation["description"]) is str:
+            new_list.append(operation["description"])
+    return sorted(list(set(new_list)))
