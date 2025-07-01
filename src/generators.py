@@ -1,11 +1,29 @@
 from typing import Generator
 
 
-def filter_by_currency(transactions: list, name: str = "USD") -> Generator:
+def filter_by_currency_new(transactions: list, name: str = "USD", currency_code: int = 2) -> list:
+    """Функция возвращает список транзакции, с необходимыми значениями валюты"""
+    new_list = []
+    for item in transactions:
+        if currency_code == 1:
+            if item["operationAmount"]["currency"]["code"] == name:
+                new_list.append(item)
+        elif currency_code == 2:
+            if item["currency_code"] == name:
+                new_list.append(item)
+    return new_list
+
+
+def filter_by_currency(transactions: list, name: str = "USD", currency_code: int = 2) -> Generator:
     """Функция возвращает транзакции, с необходимым значением валюты поочереди"""
     for item in transactions:
-        if item["operationAmount"]["currency"]["code"] == name:
-            yield item
+        if currency_code == 1:
+            if item["operationAmount"]["currency"]["code"] == name:
+                yield item
+        elif currency_code == 2:
+            if item["currency_code"] == name:
+                yield item
+
 
 
 def transaction_descriptions(transactions: list) -> Generator:

@@ -1,142 +1,122 @@
-from src.masks import get_mask_account, get_mask_card_number
-from src.widget import get_date, mask_account_card
-from src.processing import sort_by_date, filter_by_state
-from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
-from src.decorators import log
-from src.utils import open_json
+from src.generators import filter_by_currency_new
+from src.processing import filter_by_state, process_bank_search, sort_by_date
 from src.transaction_reader import open_csv, open_xlsx
-from src.external_api import sum_transaction
-
-dict_filter = [
-    {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
-    {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'},
-    {'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'},
-    {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}
-]
-transactions = (
-    [
-        {
-            "id": 939719570,
-            "state": "EXECUTED",
-            "date": "2018-06-30T02:08:58.425572",
-            "operationAmount": {
-                "amount": "9824.07",
-                "currency": {
-                    "name": "USD",
-                    "code": "USD"
-                }
-            },
-            "description": "Перевод организации",
-            "from": "Счет 75106830613657916952",
-            "to": "Счет 11776614605963066702"
-        },
-        {
-            "id": 142264268,
-            "state": "EXECUTED",
-            "date": "2019-04-04T23:20:05.206878",
-            "operationAmount": {
-                "amount": "79114.93",
-                "currency": {
-                    "name": "USD",
-                    "code": "USD"
-                }
-            },
-            "description": "Перевод со счета на счет",
-            "from": "Счет 19708645243227258542",
-            "to": "Счет 75651667383060284188"
-        },
-        {
-            "id": 873106923,
-            "state": "EXECUTED",
-            "date": "2019-03-23T01:09:46.296404",
-            "operationAmount": {
-                "amount": "43318.34",
-                "currency": {
-                    "name": "руб.",
-                    "code": "RUB"
-                }
-            },
-            "description": "Перевод со счета на счет",
-            "from": "Счет 44812258784861134719",
-            "to": "Счет 74489636417521191160"
-        },
-        {
-            "id": 895315941,
-            "state": "EXECUTED",
-            "date": "2018-08-19T04:27:37.904916",
-            "operationAmount": {
-                "amount": "56883.54",
-                "currency": {
-                    "name": "USD",
-                    "code": "USD"
-                }
-            },
-            "description": "Перевод с карты на карту",
-            "from": "Visa Classic 6831982476737658",
-            "to": "Visa Platinum 8990922113665229"
-        },
-        {
-            "id": 594226727,
-            "state": "CANCELED",
-            "date": "2018-09-12T21:27:25.241689",
-            "operationAmount": {
-                "amount": "67314.70",
-                "currency": {
-                    "name": "руб.",
-                    "code": "RUB"
-                }
-            },
-            "description": "Перевод организации",
-            "from": "Visa Platinum 1246377376343588",
-            "to": "Счет 14211924144426031657"
-        }
-    ]
-)
-# print(get_mask_card_number(1234123412341234))
-# print(get_mask_account(12341234123412341234))
-# print(mask_account_card("Счет 73654108430135874305"))
-# print(mask_account_card("MasterCard 7158300734726758"))
-# print(mask_account_card("Visa Classic 6831982476737658"))
-# print(get_date("2024-03-11T02:26:18.671407"))
-# print(filter_by_state(dict_filter, "EXECUTED"))
-# print(sort_by_date(dict_filter))
-
-# filtered_trans = filter_by_currency(transactions, "USD")
-# for _ in range(3):
-#     print(next(filtered_trans, StopIteration))
-#
-# descriptions = transaction_descriptions(transactions)
-# for _ in range(5):
-#     print(next(descriptions, StopIteration))
-#
-# card_number = card_number_generator(1, 9999999999999999)
-# for _ in range(5):
-#     print(next(card_number))
+from src.utils import open_json
+from src.widget import get_date, mask_account_card
 
 
-# @log(filename="mylog.txt")  # filename="mylog.txt"
-# def my_function_1(x, y):
-#     return x + y
-#
-#
-# my_function_1(1, 2)
+def main() -> None:
+    """Функция, которая отвечает за основную логику проекта и связывает функциональности между собой"""
+    print("Привет!\nДобро пожаловать в программу работы с банковскими транзакциями.")
+    while True:
+        user_1 = int(
+            input(
+                "Выберите необходимый пункт меню:\n"
+                "1. Получить информацию о транзакциях из JSON-файла\n"
+                "2. Получить информацию о транзакциях из CSV-файла\n"
+                "3. Получить информацию о транзакциях из XLSX-файла\n"
+            )
+        )
+        if user_1 == 1:
+            print("Для обработки выбран JSON-файл.\n")
+            file_transactions = open_json("data/operations.json")
+            currency_code = 1
+            break
+        elif user_1 == 2:
+            print("Для обработки выбран CSV-файл.\n")
+            file_transactions = open_csv("data/transactions.csv")
+            currency_code = 2
+            break
+        elif user_1 == 3:
+            print("Для обработки выбран XLSX-файл.\n")
+            file_transactions = open_xlsx("data/transactions_excel.xlsx")
+            currency_code = 2
+            break
+        else:
+            print("Введено неверное значение!")
+    while True:
+        user_2 = input(
+            "Введите статус, по которому необходимо выполнить фильтрацию.\n"
+            "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
+        )
+        if user_2.upper() in ["EXECUTED", "CANCELED", "PENDING"]:
+            filtered_file_transactions = filter_by_state(file_transactions, user_2.upper())
+            break
+        else:
+            print(f'Статус операции "{user_2}" недоступен.\n')
+    while True:
+        user_3 = input("Отсортировать операции по дате? Да/Нет\n")
+        if user_3.lower() == "да":
+            while True:
+                user_4 = input("Отсортировать по возрастанию или по убыванию?\n")
+                if user_4.lower() == "по возрастанию":
+                    filtered_file_transactions = sort_by_date(filtered_file_transactions)
+                    break
+                elif user_4.lower() == "по убыванию":
+                    filtered_file_transactions = sort_by_date(filtered_file_transactions, False)
+                    break
+                else:
+                    print("Введено некорректное значение!.\n")
+            break
+        elif user_3.lower() == "нет":
+            break
+        else:
+            print("Введено некорректное значение!.\n")
+    while True:
+        user_5 = input("Выводить только рублевые транзакции? Да/Нет\n")
+        if user_5.lower() == "да":
+            code_transaction = "RUB"
+            filtered_file_transactions = filter_by_currency_new(
+                filtered_file_transactions, code_transaction, currency_code
+            )
+            break
+        elif user_5.lower() == "нет":
+            break
+        else:
+            print("Введено некорректное значение!.\n")
+    while True:
+        user_6 = input("Отфильтровать список транзакций по определенному слову в описании? Да/Нет\n")
+        if user_6.lower() == "да":
+            user_7 = input("Введите слово для поиска.\n")
+            filtered_file_transactions = process_bank_search(filtered_file_transactions, user_7)
+            break
+        elif user_6.lower() == "нет":
+            break
+        else:
+            print("Введено некорректное значение!.\n")
+    if len(filtered_file_transactions) == 0:
+        print("\nНе найдено ни одной транзакции, подходящей под ваши условия фильтрации\n")
+    else:
+        print("\nРаспечатываю итоговый список транзакций...\n")
+
+        print(f"Всего банковских операций в выборке: {len(filtered_file_transactions)}\n")
+
+        for item in filtered_file_transactions:
+            if item.get("description").lower() == "Открытие вклада".lower() and currency_code == 1:
+                print(
+                    f'{get_date(item["date"])} {item["description"]}\n'
+                    f'{mask_account_card(item["to"])}\n'
+                    f'Сумма: {item["operationAmount"]["amount"]} {item["operationAmount"]["currency"]["code"]}\n'
+                )
+            elif item.get("description").lower() == "Открытие вклада".lower() and currency_code == 2:
+                print(
+                    f'{get_date(item["date"])} {item["description"]}\n'
+                    f'{mask_account_card(item["to"])}\n'
+                    f'Сумма: {item["amount"]} {item["currency_code"]}\n'
+                )
+            elif currency_code == 1:
+                print(
+                    f'{get_date(item["date"])} {item["description"]}\n'
+                    f'{mask_account_card(item["from"])} -> {mask_account_card(item["to"])}\n'
+                    f'Сумма: {item["operationAmount"]["amount"]} {item["operationAmount"]["currency"]["code"]}\n'
+                )
+            elif currency_code == 2:
+                print(
+                    f'{get_date(item["date"])} {item["description"]}\n'
+                    f'{mask_account_card(item["from"])} -> {mask_account_card(item["to"])}\n'
+                    f'Сумма: {item["amount"]} {item["currency_code"]}\n'
+                )
 
 
-# @log(filename="mylog.txt")  # filename="mylog.txt"
-# def my_function_2(x, y):
-#     return x + y
-#
-#
-# my_function_2(1, (1, 2))
-
-transactions_json = open_json("data/operations.json")
-# for trans in transactions_json:
-#     print(sum_transaction(trans))
-# print(transactions_json)
-
-transactions_csv = open_csv("data/transactions.csv")
-print(transactions_csv)
-
-transactions_xlsx = open_xlsx("data/transactions_excel.xlsx")
-# print(type(transactions_xlsx))
-# print(transactions_xlsx)
+if __name__ == "__main__":
+    main()
