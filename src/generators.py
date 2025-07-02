@@ -14,16 +14,11 @@ def filter_by_currency_new(transactions: list, name: str = "USD", currency_code:
     return new_list
 
 
-def filter_by_currency(transactions: list, name: str = "USD", currency_code: int = 2) -> Generator:
+def filter_by_currency(transactions: list, name: str = "USD") -> Generator:
     """Функция возвращает транзакции, с необходимым значением валюты поочереди"""
     for item in transactions:
-        if currency_code == 1:
-            if item["operationAmount"]["currency"]["code"] == name:
-                yield item
-        elif currency_code == 2:
-            if item["currency_code"] == name:
-                yield item
-
+        if item["operationAmount"]["currency"]["code"] == name:
+            yield item
 
 
 def transaction_descriptions(transactions: list) -> Generator:
