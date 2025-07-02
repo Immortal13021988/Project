@@ -8,84 +8,77 @@ from src.widget import get_date, mask_account_card
 def main() -> None:
     """Функция, которая отвечает за основную логику проекта и связывает функциональности между собой"""
     print("Привет!\nДобро пожаловать в программу работы с банковскими транзакциями.")
-    while True:
-        user_1 = int(
-            input(
-                "Выберите необходимый пункт меню:\n"
-                "1. Получить информацию о транзакциях из JSON-файла\n"
-                "2. Получить информацию о транзакциях из CSV-файла\n"
-                "3. Получить информацию о транзакциях из XLSX-файла\n"
-            )
+    file_transactions = []  # список транзакций получаемый из файла
+    filtered_file_transactions = []  # отфильтрованный список транзакций
+    currency_code = int  # определяется в зависимости от выбранного файла
+    user_1 = user_2 = user_3 = user_4 = user_5 = user_6 = "str"  # ввод пользователя
+    while user_1 not in ['1', '2', '3']:
+        user_1 = input(
+            "Выберите необходимый пункт меню:\n"
+            "1. Получить информацию о транзакциях из JSON-файла\n"
+            "2. Получить информацию о транзакциях из CSV-файла\n"
+            "3. Получить информацию о транзакциях из XLSX-файла\n"
         )
-        if user_1 == 1:
+        if user_1 == '1':
             print("Для обработки выбран JSON-файл.\n")
             file_transactions = open_json("data/operations.json")
             currency_code = 1
-            break
-        elif user_1 == 2:
+        elif user_1 == '2':
             print("Для обработки выбран CSV-файл.\n")
             file_transactions = open_csv("data/transactions.csv")
             currency_code = 2
-            break
-        elif user_1 == 3:
+        elif user_1 == '3':
             print("Для обработки выбран XLSX-файл.\n")
             file_transactions = open_xlsx("data/transactions_excel.xlsx")
             currency_code = 2
-            break
         else:
             print("Введено неверное значение!")
-    while True:
+    while user_2.upper() not in ["EXECUTED", "CANCELED", "PENDING"]:
         user_2 = input(
             "Введите статус, по которому необходимо выполнить фильтрацию.\n"
             "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
         )
         if user_2.upper() in ["EXECUTED", "CANCELED", "PENDING"]:
             filtered_file_transactions = filter_by_state(file_transactions, user_2.upper())
-            break
         else:
             print(f'Статус операции "{user_2}" недоступен.\n')
-    while True:
+    while user_3.lower() not in ["да", "нет"]:
         user_3 = input("Отсортировать операции по дате? Да/Нет\n")
         if user_3.lower() == "да":
-            while True:
+            while user_4.lower() not in ["по возрастанию", "по убыванию"]:
                 user_4 = input("Отсортировать по возрастанию или по убыванию?\n")
                 if user_4.lower() == "по возрастанию":
                     filtered_file_transactions = sort_by_date(filtered_file_transactions)
-                    break
                 elif user_4.lower() == "по убыванию":
                     filtered_file_transactions = sort_by_date(filtered_file_transactions, False)
-                    break
                 else:
                     print("Введено некорректное значение!.\n")
-            break
         elif user_3.lower() == "нет":
             break
         else:
             print("Введено некорректное значение!.\n")
-    while True:
+    while user_5.lower() not in ["да", "нет"]:
         user_5 = input("Выводить только рублевые транзакции? Да/Нет\n")
         if user_5.lower() == "да":
             code_transaction = "RUB"
             filtered_file_transactions = filter_by_currency_new(
                 filtered_file_transactions, code_transaction, currency_code
             )
-            break
         elif user_5.lower() == "нет":
             break
         else:
             print("Введено некорректное значение!.\n")
-    while True:
+    while user_6.lower() not in ["да", "нет"]:
         user_6 = input("Отфильтровать список транзакций по определенному слову в описании? Да/Нет\n")
         if user_6.lower() == "да":
             user_7 = input("Введите слово для поиска.\n")
             filtered_file_transactions = process_bank_search(filtered_file_transactions, user_7)
-            break
         elif user_6.lower() == "нет":
             break
         else:
             print("Введено некорректное значение!.\n")
     if len(filtered_file_transactions) == 0:
-        print("\nНе найдено ни одной транзакции, подходящей под ваши условия фильтрации\n")
+        print("\nНе найдено ни одной транзакции, подходящей под ваши условия фильтрации.\n")
     else:
         print("\nРаспечатываю итоговый список транзакций...\n")
 
